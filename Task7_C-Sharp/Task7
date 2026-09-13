@@ -1,0 +1,312 @@
+using System;
+
+#region Problem01
+public class Car
+{
+    public int Id { get; set; }
+    public string Brand { get; set; }
+    public decimal Price { get; set; }
+    public Car() { }
+    public Car(int id)
+    {
+        Id = id;
+    }
+    public Car(int id, string brand)
+    {
+        Id = id;
+        Brand = brand;
+    }
+    public Car(int id, string brand, decimal price)
+    {
+        Id = id;
+        Brand = brand;
+        Price = price;
+    }
+}
+
+// Question1:
+// Defining a custom constructor suppresses the compiler-generated default constructor 
+// to prevent creating objects in an invalid or uninitialized state without explicit data.
+#endregion
+
+#region Problem02
+public class Calculator
+{ 
+    public int Sum(int a, int b) => a + b;
+    public int Sum(int a, int b, int c) => a + b + c;
+    public double Sum(double a, double b) => a + b;
+}
+
+// Question2:
+// Overloading improves readability and reusability by allowing a single logical name 
+// for operations that perform the same concept on different data types/parameter counts.
+#endregion
+
+#region Problem03
+public class Parent
+{
+    public int X { get; set; }
+    public int Y { get; set; } 
+    public Parent(int x, int y)     
+    {
+        X = x;
+        Y = y;
+    }
+    public virtual int Product() => X * Y; 
+    public override string ToString() => $"({X}, {Y})"; 
+}
+
+public class Child : Parent
+{
+    public int Z { get; set; } 
+    public Child(int x, int y, int z) : base(x, y) 
+    {
+        Z = z;
+    }
+    public override string ToString() => $"({X}, {Y}, {Z})";
+}
+
+// Question3:
+// Constructor chaining prevents code duplication by ensuring base class initialization 
+// happens before child-specific logic runs.
+#endregion
+
+#region Problem04
+public class ChildNew : Parent
+{
+    public ChildNew(int x, int y, int z) : base(x, y) { }
+    public new int Product() => X * Y * 10;
+}
+
+public class ChildOverride : Parent
+{
+    public ChildOverride(int x, int y, int z) : base(x, y) { }
+    public override int Product() => X * Y * 10;
+}
+
+// Question4:
+// 'override' uses dynamic binding to modify runtime polymorphic behavior, whereas 
+// 'new' hides the base method strictly at compile-time when using a child reference.
+#endregion
+
+#region Problem05
+// Problem: Overriding ToString() for polymorphism.
+// Note: Implemented inside Parent and Child classes in Problem03.
+
+// Question5:
+// ToString() is overridden to provide clear, meaningful text representations of object states 
+// for debugging, logging, and printing.
+#endregion
+
+#region Problem06
+public interface IShape
+{
+    double Area { get; } 
+    void Draw(); 
+}
+public class Rectangle : IShape
+{
+    public double Width { get; set; }
+    public double Height { get; set; }
+    public Rectangle(double width, double height)
+    {
+        Width = width;
+        Height = height;
+    }
+    public double Area => Width * Height; 
+    public void Draw() 
+    {
+        Console.WriteLine($"Drawing Rectangle with Area: {Area}");
+    }
+}
+
+// Question6:
+// Interfaces cannot be instantiated directly because they only represent abstract contracts 
+// with no actual object state or implementation memory structure.
+#endregion
+
+#region Problem07
+public interface IShapeWithDefault
+{
+    double Area { get; } 
+    void Draw(); 
+
+    public void PrintDetails() 
+    {
+        Console.WriteLine($"Shape Details - Area: {Area}");
+    }
+}
+public class Circle : IShapeWithDefault 
+{
+    public double Radius { get; set; }
+
+    public Circle(double radius) => Radius = radius;
+
+    public double Area => Math.PI * Radius * Radius;
+
+    public void Draw() => Console.WriteLine("Drawing Circle");
+}
+
+// Question7:
+// Default interface implementations allow extending existing interfaces with new features 
+// without breaking backward compatibility for classes already implementing them.
+#endregion
+
+#region Problem08
+public interface IMovable
+{
+    void Move(); 
+}
+public class MovableCar : IMovable 
+{
+    public void Move() 
+    {
+        Console.WriteLine("Car is moving...");
+    }
+}
+// Question8:
+// Using interface references enables loose coupling and abstraction, allowing code to depend 
+// on capabilities rather than concrete classes.
+#endregion
+
+#region Problem09
+public interface IReadable
+{
+    void Read(); 
+}
+public interface IWritable
+{
+    void Write(); 
+}
+public class File : IReadable, IWritable 
+{
+    public void Read() => Console.WriteLine("Reading file..."); 
+    public void Write() => Console.WriteLine("Writing to file..."); 
+}
+
+// Question9:
+// C# overcomes single class inheritance limits by supporting multiple interface implementations, 
+// allowing a class to adhere to multiple distinct contracts.
+#endregion
+
+#region Problem10
+public abstract class ShapeBase
+{
+    public virtual void Draw()
+    {
+        Console.WriteLine("Drawing Shape"); 
+    }
+
+    public abstract double CalculateArea(); 
+}
+public class ShapeRectangle : ShapeBase 
+{
+    public double Length { get; set; }
+    public double Width { get; set; }
+
+    public ShapeRectangle(double length, double width)
+    {
+        Length = length;
+        Width = width;
+    }
+    public override void Draw() 
+    {
+        Console.WriteLine("Drawing Rectangle");
+    }
+    public override double CalculateArea() => Length * Width; 
+}
+
+// Question10:
+// Virtual methods provide a default body that can optionally be overridden. Abstract methods 
+// have no body and MUST be implemented by non-abstract derived classes.
+#endregion
+
+#region Part02
+// 1. Difference between Class and Struct:
+// - Class: Reference type stored on Heap, supports inheritance, can be null.
+// - Struct: Value type stored on Stack, performance-optimized, no class inheritance.
+
+// 2. Class Relationships (Other than Inheritance):
+// - Association: Simple "uses-a" link between independent objects.
+// - Aggregation: "has-a" relationship where child objects can exist without the parent.
+// - Composition: "has-a" relationship where child lifecycle is strictly tied to the parent.
+// - Dependency: Temporary usage of a class inside a method scope.
+#endregion
+
+#region Part03-Bonus 
+
+// 01.01. Why Structs Do Not Support Inheritance??
+// - Stack vs Heap Memory: Structs are value types stored on the Stack (or inline) 
+//   with a fixed memory size known at compile time.
+// - No Object Overhead: Classes use dynamic dispatch and store a Type Handle and 
+//   Virtual Method Table (VTable) in their memory header on the Heap. Structs lack 
+//   this overhead to stay lightweight.
+// - Memory Slicing Prevention: Inheriting structs would cause field-slicing and memory 
+//   corruption when assigning a child struct to a parent struct variable on the Stack.
+// * Note: Structs implicitly inherit from System.ValueType and can implement interfaces.
+
+// 01.02. Execution Behavior: Product() vs Sum() (Parent vs Child)??
+// - Product() calls Parent (Early / Static Binding):
+//   The method uses the 'new' keyword for method hiding. The compiler resolves the call 
+//   at compile time strictly based on the reference type (Parent P01).
+// - Sum() calls Child (Late / Dynamic Binding):
+//   The method uses 'virtual' and 'override'. The resolution is deferred to runtime, 
+//   where the Virtual Method Table (VTable) invokes the implementation of the actual object 
+//   instance on the Heap (Child Ch01).
+
+// 01.03. Static vs Dynamic Binding??
+// - Static (Early) Binding: Resolved at compile time based on the reference type. 
+//   Offers faster performance. Used for regular methods, overloaded methods, and 'new' methods.
+// - Dynamic (Late) Binding: Resolved at runtime based on the actual instance type. 
+//   Uses a VTable lookup to enable true runtime polymorphism via 'virtual' and 'override'.
+
+// 0.01. Static vs Dynamic Binding:
+// - Static Binding (Early): Resolved at compile-time. Fast execution. Used for static methods, 
+//   overloaded methods, and non-virtual method hiding ('new').
+// - Dynamic Binding (Late): Resolved at runtime using Virtual Method Tables (vtable). 
+//   Enables true polymorphism via 'virtual' and 'override' keywords.
+#endregion
+
+public class Program
+{
+    public static void Main()
+    {
+        // Problem 01
+        Car c1 = new Car();
+        Car c2 = new Car(101, "Toyota", 25000m);
+
+        // Problem 02
+        Calculator calc = new Calculator();
+        Console.WriteLine($"Sum (int): {calc.Sum(5, 10)}");
+
+        // Problem 03 & 05
+        Parent p = new Parent(2, 3);
+        Child c = new Child(2, 3, 4);
+        Console.WriteLine($"Parent ToString: {p}");
+        Console.WriteLine($"Child ToString: {c}");
+
+        // Problem 04
+        Parent hiddenRef = new ChildNew(2, 3, 4);
+        Parent overriddenRef = new ChildOverride(2, 3, 4);
+        Console.WriteLine($"New result: {hiddenRef.Product()}"); 
+        Console.WriteLine($"Override result: {overriddenRef.Product()}"); 
+
+        // 06 & 07
+        IShapeWithDefault circle = new Circle(5);
+        circle.PrintDetails();
+
+        // Problem 08
+        IMovable movableCar = new MovableCar();
+        movableCar.Move();
+
+        // Problem 09
+        File myFile = new File();
+        myFile.Read();
+        myFile.Write();
+
+        // Problem 10
+        ShapeBase shapeRect = new ShapeRectangle(4, 5);
+        shapeRect.Draw();
+        Console.WriteLine($"Area: {shapeRect.CalculateArea()}");
+    }
+}
