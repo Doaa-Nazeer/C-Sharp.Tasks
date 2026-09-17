@@ -1,1 +1,460 @@
 
+using System;
+namespace AssignmentSolution
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            #region Problem 01:
+            IVehicle car = new Car();
+            IVehicle bike = new Bike();
+            car.StartEngine();
+            bike.StopEngine();
+            #endregion
+
+            #region Problem 02:
+            Shape rect = new Rectangle(5, 4);
+            Shape circle = new Circle(3);
+            rect.Display();
+            circle.Display();
+            #endregion
+
+            #region Problem 03:
+            Product[] products = new Product[]
+            {
+                new Product { Id = 1, Name = "Laptop", Price = 1200 },
+                new Product { Id = 2, Name = "Mouse", Price = 25 },
+                new Product { Id = 3, Name = "Keyboard", Price = 75 }
+            };
+            Array.Sort(products);
+            Console.WriteLine("\nSorted Products by Price:");
+            foreach (var p in products)
+            {
+                Console.WriteLine(p.Name + " - $" + p.Price);
+            }
+            #endregion
+
+            #region Problem 04: 
+            Student originalStudent = new Student { Id = 1, Name = "Doaa", Grade = 95 };
+            Student clonedStudent = new Student(originalStudent);
+            Console.WriteLine("\nOriginal: " + originalStudent.Name + ", Cloned: " + clonedStudent.Name);
+            #endregion
+
+            #region Problem 05:
+            Robot robot = new Robot();
+            robot.Walk(); 
+            IWalkable walkableRobot = robot;
+            walkableRobot.Walk(); 
+            #endregion
+
+            #region Problem 06:
+            Account acc = new Account();
+            acc.AccountId = 101;
+            acc.AccountHolder = "User";
+            acc.Balance = 5000;
+            Console.WriteLine("\nAccount " + acc.AccountId + " Balance: " + acc.Balance);
+            #endregion
+
+            #region Problem 07:
+            ILogger logger = new ConsoleLogger();
+            logger.Log("Hello World");
+            #endregion
+
+            #region Problem 08:
+            Book b1 = new Book();
+            Book b2 = new Book("C# Programming");
+            Book b3 = new Book("Clean Code", "Robert C. Martin");
+            #endregion
+
+            #region Part 02 - Problem 01:
+            Console.WriteLine("\n--- Square Series ---");
+            PrintTenShapes(new SquareSeries());
+            Console.WriteLine("--- Circle Series ---");
+            PrintTenShapes(new CircleSeries());
+            #endregion
+
+            #region Part 02 - Problem 02:
+            ShapeItem[] shapeItems = new ShapeItem[]
+            {
+                new ShapeItem("Rectangle", 45.2),
+                new ShapeItem("Square", 16.0),
+                new ShapeItem("Circle", 28.2)
+            };
+            Array.Sort(shapeItems);
+            Console.WriteLine("\nSorted Shapes by Area:");
+            foreach (var s in shapeItems)
+            {
+                Console.WriteLine(s.Name + ": " + s.Area);
+            }
+            #endregion
+
+            #region Part 02 - Problem 03:
+            GeometricShape geoRect = ShapeFactory.CreateShape("rectangle", 4, 5);
+            GeometricShape geoTri = ShapeFactory.CreateShape("triangle", 3, 6);
+
+            Console.WriteLine("\nFactory Rect Area: " + geoRect.CalculateArea() + ", Perimeter: " + geoRect.Perimeter);
+            Console.WriteLine("Factory Tri Area: " + geoTri.CalculateArea());
+            #endregion
+
+            #region Part 02 - Problem 04:
+            double[] areas = new double[] { 45.2, 16.0, 28.2, 5.5, 100.1 };
+            SelectionSort(areas);
+            Console.WriteLine("\nSelection Sorted Areas:");
+            foreach (var a in areas)
+            {
+                Console.Write(a + " ");
+            }
+            Console.WriteLine();
+            #endregion
+        }
+
+        #region Part 02 - Problem 05
+        public static void PrintTenShapes(IShapeSeries series)
+        {
+            series.ResetSeries();
+            for (int i = 0; i < 10; i++)
+            {
+                series.GetNextArea();
+                Console.Write(series.CurrentShapeArea + " ");
+            }
+            Console.WriteLine();
+        }
+        #endregion
+
+        #region Part 02 - Problem 06 
+        public static void SelectionSort(double[] numbers)
+        {
+            int n = numbers.Length;
+            for (int i = 0; i < n - 1; i++)
+            {
+                int minIdx = i;
+                for (int j = i + 1; j < n; j++)
+                {
+                    if (numbers[j] < numbers[minIdx])
+                        minIdx = j;
+                }
+                double temp = numbers[minIdx];
+                numbers[minIdx] = numbers[i];
+                numbers[i] = temp;
+            }
+        }
+        #endregion
+    }
+
+    #region Problem 01:
+    public interface IVehicle
+    {
+        void StartEngine();
+        void StopEngine();
+    }
+    public class Car : IVehicle
+    {   
+        public void StartEngine() { Console.WriteLine("Car engine started."); }
+        public void StopEngine() { Console.WriteLine("Car engine stopped."); }
+    }
+    public class Bike : IVehicle
+    {
+        public void StartEngine() { Console.WriteLine("Bike engine started."); }
+        public void StopEngine() { Console.WriteLine("Bike engine stopped."); }
+    }
+    #endregion
+
+    #region Problem 02:
+    public abstract class Shape
+    {
+        public abstract double GetArea();
+        public void Display() { Console.WriteLine("Area: " + GetArea()); }
+    }
+    public class Rectangle : Shape
+    {
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public Rectangle(double width, double height) { Width = width; Height = height; }
+        public override double GetArea() { return Width * Height; }
+    }
+    public class Circle : Shape
+    {
+        public double Radius { get; set; }
+        public Circle(double radius) { Radius = radius; }
+        public override double GetArea() { return Math.PI * Radius * Radius; }
+    }
+    #endregion
+
+    #region Problem 03: 
+    public class Product : IComparable<Product>
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+
+        public int CompareTo(Product other)
+        {
+            if (other == null) return 1;
+            return Price.CompareTo(other.Price);
+        }
+    }
+    #endregion
+
+    #region Problem 04:
+    public class Student
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Grade { get; set; }
+        public Student() { }
+        public Student(Student other)
+        {
+            this.Id = other.Id;
+            this.Name = other.Name;
+            this.Grade = other.Grade;
+        }
+    }
+    #endregion
+
+    #region Problem 05:
+    public interface IWalkable
+    {
+        void Walk();
+    }
+    public class Robot : IWalkable
+    {
+        public void Walk() { Console.WriteLine("Robot is rolling on wheels."); }
+        void IWalkable.Walk() { Console.WriteLine("Robot is walking explicitly."); }
+    }
+    #endregion
+
+    #region Problem 06:
+    public struct Account
+    {
+        private int accountId;
+        private string accountHolder;
+        private decimal balance;
+        public int AccountId { get { return accountId; } set { accountId = value; } }
+        public string AccountHolder { get { return accountHolder; } set { accountHolder = value; } }
+        public decimal Balance { get { return balance; } set { balance = value; } }
+    }
+    #endregion
+
+    #region Problem 07:
+    public interface ILogger
+    {
+        void Log(string message) { Console.WriteLine("Default Log: " + message); }
+    }
+    public class ConsoleLogger : ILogger
+    {
+        public void Log(string message) { Console.WriteLine("Console Log: " + message); }
+    }
+    #endregion
+
+    #region Problem 08:
+    public class Book
+    {
+        public string Title { get; set; }
+        public string Author { get; set; }
+
+        public Book() : this("Unknown", "Unknown") { }
+        public Book(string title) : this(title, "Unknown") { }
+        public Book(string title, string author)
+        {
+            Title = title;
+            Author = author;
+        }
+    }
+    #endregion
+
+    #region Part 02 - Problem 01:
+    public interface IShapeSeries
+    {
+        int CurrentShapeArea { get; set; }
+        void GetNextArea();
+        void ResetSeries();
+    }
+    public class SquareSeries : IShapeSeries
+    {
+        private int step = 1;
+        public int CurrentShapeArea { get; set; }
+        public SquareSeries() { ResetSeries(); }
+        public void GetNextArea()
+        {
+            CurrentShapeArea = step * step;
+            step++;
+        }
+        public void ResetSeries()
+        {
+            step = 1;
+            CurrentShapeArea = 0;
+        }
+    }
+    public class CircleSeries : IShapeSeries
+    {
+        private int radius = 1;
+        public int CurrentShapeArea { get; set; }
+        public CircleSeries() { ResetSeries(); }
+        public void GetNextArea()
+        {
+            CurrentShapeArea = (int)(Math.PI * radius * radius);
+            radius++;
+        }
+        public void ResetSeries()
+        {
+            radius = 1;
+            CurrentShapeArea = 0;
+        }
+    }
+    #endregion
+
+    #region Part 02 - Problem 02:
+    public class ShapeItem : IComparable<ShapeItem>
+    {
+        public string Name { get; set; }
+        public double Area { get; set; }
+        public ShapeItem(string name, double area)
+        {
+            Name = name;
+            Area = area;
+        }
+        public int CompareTo(ShapeItem other) { return Area.CompareTo(other.Area); }
+    }
+    #endregion
+
+    #region Part 02 - Problem 03:
+    public abstract class GeometricShape
+    {
+        public double Dimension1 { get; set; }
+        public double Dimension2 { get; set; }
+        public GeometricShape(double dim1, double dim2)
+        {
+            Dimension1 = dim1;
+            Dimension2 = dim2;
+        }
+        public abstract double CalculateArea();
+        public abstract double Perimeter { get; }
+    }
+    public class Triangle : GeometricShape
+    {
+        public Triangle(double baseDim, double height) : base(baseDim, height) { }
+
+        public override double CalculateArea() { return 0.5 * Dimension1 * Dimension2; }
+        public override double Perimeter { get { return Dimension1 + Dimension2 + Math.Sqrt(Dimension1 * Dimension1 + Dimension2 * Dimension2); } }
+    }
+    public class GeometricRectangle : GeometricShape
+    {
+        public GeometricRectangle(double width, double height) : base(width, height) { }
+
+        public override double CalculateArea() { return Dimension1 * Dimension2; }
+        public override double Perimeter { get { return 2 * (Dimension1 + Dimension2); } }
+    }
+    #endregion
+
+    #region Part 02 - Problem 04:
+    public static class ShapeFactory
+    {
+        public static GeometricShape CreateShape(string shapeType, double dim1, double dim2)
+        {
+            if (shapeType.ToLower() == "rectangle")
+                return new GeometricRectangle(dim1, dim2);
+            else if (shapeType.ToLower() == "triangle")
+                return new Triangle(dim1, dim2);
+            else
+                throw new ArgumentException("Invalid shape type");
+        }
+    }
+    #endregion
+}
+
+#region Questions
+/* 
+                            Part01
+-Question01:
+Question: Why is it better to code against an interface rather than a concrete class?
+Answer: Coding against an interface promotes loose coupling and high flexibility. It allows 
+components to swap implementations without modifying existing business logic, making the system 
+easier to maintain, test (using Mock objects), and extend following the Open/Closed Principle (OCP).
+
+-Question02:
+Question: When should you prefer an abstract class over an interface?
+Answer: Prefer an abstract class when classes share an "IS-A" relationship and require shared state 
+(fields), common code execution (non-abstract methods), or specific access modifiers (protected members). 
+Use an interface for defining a contract ("CAN-DO" behavior) across unrelated classes.
+
+-Question03:
+Question: How does implementing IComparable improve flexibility in sorting?
+Answer: Implementing IComparable defines a default natural sort order directly within the domain class. 
+This enables standard built-in mechanisms like Array.Sort() or List<T>.Sort() to automatically sort 
+arrays and collections without requiring custom sorting algorithms every time.
+
+-Question04:
+Question: What is the primary purpose of a copy constructor in C#?
+Answer: The primary purpose is to perform a deep copy of an existing object, instantiating a completely 
+independent object with replicated state. This avoids unintended side effects caused by shared references.
+
+-Question05:
+Question: How does explicit interface implementation help in resolving naming conflicts?
+Answer: It disambiguates method calls when a class implements multiple interfaces containing 
+identical method signatures, or when a class method shares a name with an interface method. Explicitly 
+implemented methods are accessible only through an interface reference.
+
+-Question06:
+Question: What is the key difference between encapsulation in structs and classes?
+Answer: Structs are value types (allocated on the stack by default), so encapsulation protects 
+data copied by value upon assignment or passing. Classes are reference types (allocated on the heap), 
+so encapsulation safeguards shared reference state accessible across multiple callers.
+
+-Question07:
+Question: What is abstraction as a guideline, what's its relation with encapsulation?
+Answer: Abstraction simplifies complex systems by exposing only relevant behaviors while concealing 
+internal execution mechanics. Encapsulation is the tool that implements abstraction by bundling data 
+and controlling access through access modifiers (private, public, protected).
+
+-Question08:
+Question: How do default interface implementations affect backward compatibility in C#?
+Answer: They allow developers to introduce new members to an existing interface with default 
+logic without breaking third-party or existing concrete classes that already implement that interface.
+
+-Question09:
+Question: How does constructor overloading improve class usability?
+Answer: It offers caller flexibility by permitting object instantiation with varying sets of 
+initial parameters, facilitating default configurations or detailed custom setups.
+
+
+                     Part02
+2. Coding against Interface vs Coding against Abstraction:
+- "Coding against an interface" specifically means declaring dependencies using Interface types 
+  (e.g., ILogger instead of ConsoleLogger).
+- "Coding against abstraction" is a broader architectural guideline (Dependency Inversion Principle) 
+  directing high-level modules to depend on abstract types (Interfaces or Abstract Classes) rather 
+  than low-level concrete implementations.
+
+3. Abstraction Implementation Guidelines:
+Abstraction is implemented in C# using:
+- Interfaces (Pure contracts without internal state).
+- Abstract Classes (Partial contracts with shared base code).
+- Properties & Access Modifiers (Hiding private state while exposing clean getters/setters).
+
+                      Part03
+1. Memory Allocation: Interface Reference vs Object 
+When creating an interface reference pointing to a class instance:
+    IMyType type = new MyType();
+
+- The reference variable 'type' is allocated on the Stack.
+- The actual object instance 'new MyType()' is created on the Heap.
+- Memory layout: The interface reference contains a pointer to the Interface Virtual Table (Interface VMT) 
+  inside the object's Method Table on the Heap.
+- Calling methods via the interface reference routes through the VMT to find the corresponding method 
+  implementation in 'MyType'.
+- Direct fields or non-interface methods of 'MyType' remain inaccessible through 'type' unless 
+  cast back to 'MyType'.
+
+2. Dependency Inversion Principle (DIP):
+- High-level modules should not depend on low-level modules; both should depend on abstractions.
+- Abstractions should not depend on details; details should depend on abstractions.
+- Benefit: Decouples classes, enabling unit testing, pluggable architectures, and easy refactoring.
+
+3. Specification Design Pattern using Interfaces:
+- Purpose: Encapsulates reusable business rules/validation logic into independent specification objects.
+- Structure: Defines an interface ISpecification<T> with a method `bool IsSatisfiedBy(T entity)`.
+- Benefit: Combines multiple domain rules dynamically using logical operators (And, Or, Not) 
+  without cluttering core entity classes.
+*/
+#endregion
