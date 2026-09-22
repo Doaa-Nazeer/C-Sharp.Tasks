@@ -1,0 +1,483 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace Task9
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+        }
+    }
+
+    #region Part01.Problem 1:
+    public enum Weekdays
+    {
+        Monday = 1,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday
+    }
+    public static class WeekdaysDemo
+    {
+        public static void Run()
+        {
+            foreach (Weekdays day in Enum.GetValues(typeof(Weekdays)))
+            {
+                Console.WriteLine($"{day} = {(int)day}");
+            }
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 2:
+
+    public enum Grades : short
+    {
+        F = -1,
+        D = 0,
+        C = 1,
+        B = 2,
+        A = 3
+    }
+    public static class GradesDemo
+    {
+        public static void Run()
+        {
+            foreach (Grades grade in Enum.GetValues(typeof(Grades)))
+            {
+                Console.WriteLine($"{grade} = {(short)grade}");
+            }
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 3:
+    public class Person
+    {
+        public string Name { get; set; }
+        public virtual string Department { get; set; }
+        public Person(string name, string department)
+        {
+            Name = name;
+            Department = department;
+        }
+        public override string ToString() => $"Name: {Name}, Department: {Department}";
+    }
+    public static class PersonDemo
+    {
+        public static void Run()
+        {
+            Person p1 = new Person("Ali", "IT");
+            Person p2 = new Person("Mona", "HR");
+            Console.WriteLine(p1);
+            Console.WriteLine(p2);
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 4:
+ 
+    public class BaseClass
+    {
+        public virtual decimal Salary { get; set; } = 5000;
+    }
+    public class Parent : BaseClass
+    {
+        public sealed override decimal Salary { get => base.Salary; set => base.Salary = value; }
+    }
+    public class Child : Parent
+    {
+        public void DisplaySalary()
+        {
+            Console.WriteLine($"Salary: {Salary}");
+        }
+    }
+    public static class SealedDemo
+    {
+        public static void Run()
+        {
+            Child child = new Child();
+            child.DisplaySalary();
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 5:
+    public static partial class Utility
+    {
+        public static double CalculateRectanglePerimeter(double length, double width)
+        {
+            return 2 * (length + width);
+        }
+    }
+    public static class UtilityDemo1
+    {
+        public static void Run()
+        {
+            double perimeter = Utility.CalculateRectanglePerimeter(5, 10);
+            Console.WriteLine($"Perimeter: {perimeter}");
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 6:
+    public class ComplexNumber
+    {
+        public double Real { get; set; }
+        public double Imaginary { get; set; }
+
+        public ComplexNumber(double real, double imaginary)
+        {
+            Real = real;
+            Imaginary = imaginary;
+        }
+        public static ComplexNumber operator *(ComplexNumber c1, ComplexNumber c2)
+        {
+            return new ComplexNumber(
+                c1.Real * c2.Real - c1.Imaginary * c2.Imaginary,
+                c1.Real * c2.Imaginary + c1.Imaginary * c2.Real
+            );
+        }
+        public override string ToString() => $"{Real} + {Imaginary}i";
+    }
+    public static class ComplexDemo
+    {
+        public static void Run()
+        {
+            ComplexNumber c1 = new ComplexNumber(2, 3);
+            ComplexNumber c2 = new ComplexNumber(4, 5);
+            ComplexNumber result = c1 * c2;
+            Console.WriteLine($"Result: {result}");
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 7:
+    public enum GenderByte : byte
+    {
+        Male = 1,
+        Female = 2
+    }
+    public enum GenderInt : int
+    {
+        Male = 1,
+        Female = 2
+    }
+    public static class GenderDemo
+    {
+        public static void Run()
+        {
+            Console.WriteLine($"Byte Enum Size: {sizeof(GenderByte)} byte");
+            Console.WriteLine($"Int Enum Size: {sizeof(GenderInt)} bytes");
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 8:
+    public static partial class Utility
+    {
+        public static double CelsiusToFahrenheit(double celsius) => (celsius * 9 / 5) + 32;
+        public static double FahrenheitToCelsius(double fahrenheit) => (fahrenheit - 32) * 5 / 9;
+    }
+    public static class TempDemo
+    {
+        public static void Run()
+        {
+            Console.WriteLine($"25 C = {Utility.CelsiusToFahrenheit(25)} F");
+            Console.WriteLine($"77 F = {Utility.FahrenheitToCelsius(77)} C");
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 9:
+    public static class TryParseDemo
+    {
+        public static void Run()
+        {
+            string input = "A";
+            if (Enum.TryParse<Grades>(input, out Grades result))
+            {
+                Console.WriteLine($"Parsed successfully: {result}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid grade string.");
+            }
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 10:
+    public class Employee
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Department { get; set; }
+        public override bool Equals(object obj)
+        {
+            if (obj is Employee other)
+            {
+                return Id == other.Id && Name == other.Name && Department == other.Department;
+            }
+            return false;
+        }
+        public override int GetHashCode() => HashCode.Combine(Id, Name, Department);
+    }
+
+    public static class Helper2<T>
+    {
+        public static int SearchArray(T[] array, T target)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] != null && array[i].Equals(target))
+                    return i;
+            }
+            return -1;
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 11:
+    public static class Helper
+    {
+        public static T Max<T>(T a, T b) where T : IComparable<T>
+        {
+            return a.CompareTo(b) > 0 ? a : b;
+        }
+    }
+    public static class GenericMaxDemo
+    {
+        public static void Run()
+        {
+            Console.WriteLine(Helper.Max(10, 20));
+            Console.WriteLine(Helper.Max(5.5, 2.3));
+            Console.WriteLine(Helper.Max("Apple", "Banana"));
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 12:
+    public static partial class Helper2Advanced
+    {
+        public static void ReplaceArray<T>(T[] array, T oldValue, T newValue)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (EqualityComparer<T>.Default.Equals(array[i], oldValue))
+                {
+                    array[i] = newValue;
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 13:
+    public struct Rectangle
+    {
+        public double Length { get; set; }
+        public double Width { get; set; }
+        public Rectangle(double length, double width)
+        {
+            Length = length;
+            Width = width;
+        }
+        public override string ToString() => $"Rectangle({Length}x{Width})";
+    }
+    public static class RectangleSwapDemo
+    {
+        public static void Swap(ref Rectangle r1, ref Rectangle r2)
+        {
+            Rectangle temp = r1;
+            r1 = r2;
+            r2 = temp;
+        }
+    }
+    #endregion
+
+    #region Part01.Problem 14:
+    public class Department
+    {
+        public int DeptId { get; set; }
+        public string DeptName { get; set; }
+        public override bool Equals(object obj)
+        {
+            if (obj is Department other)
+                return DeptId == other.DeptId && DeptName == other.DeptName;
+            return false;
+        }
+        public override int GetHashCode() => HashCode.Combine(DeptId, DeptName);
+    }
+    #endregion
+
+    #region Part01.Problem 15:
+    public struct CircleStruct
+    {
+        public double Radius { get; set; }
+        public string Color { get; set; }
+
+        public CircleStruct(double radius, string color)
+        {
+            Radius = radius;
+            Color = color;
+        }
+        public static bool operator ==(CircleStruct c1, CircleStruct c2) => c1.Equals(c2);
+        public static bool operator !=(CircleStruct c1, CircleStruct c2) => !c1.Equals(c2);
+        public override bool Equals(object obj)
+        {
+            if (obj is CircleStruct other)
+                return Radius == other.Radius && Color == other.Color;
+            return false;
+        }
+        public override int GetHashCode() => HashCode.Combine(Radius, Color);
+    }
+    #endregion
+
+    #region Part02 - Conceptual Questions
+    /*
+    1- What we mean by Generalization concept using Generics?
+       - Generalization allows writing code (methods/classes) that works with any data type while ensuring full compile-time type safety and performance (no boxing/unboxing).
+
+    2- What we mean by hierarchy design in real business?
+       - Structuring domain entities using inheritance and interfaces (e.g., Employee -> Manager -> Executive) to mirror domain relationships, facilitate code reuse, and support polymorphism.
+    */
+    #endregion
+
+    #region Part02.Problem 1:
+    public static class ArrayReverser
+    {
+        public static T[] ReverseArray<T>(T[] inputArray)
+        {
+            if (inputArray == null) return null;
+
+            T[] reversed = new T[inputArray.Length];
+            for (int i = 0; i < inputArray.Length; i++)
+            {
+                reversed[i] = inputArray[inputArray.Length - 1 - i];
+            }
+            return reversed;
+        }
+    }
+    #endregion
+
+    #region Part02.Problem 2:
+    public class CustomStack<T>
+    {
+        private List<T> _elements = new List<T>();
+        public void Push(T item)
+        {
+            _elements.Add(item);
+        }
+        public T Pop()
+        {
+            if (IsEmpty())
+                throw new InvalidOperationException("Stack is empty.");
+
+            T item = _elements[_elements.Count - 1];
+            _elements.RemoveAt(_elements.Count - 1);
+            return item;
+        }
+        public T Peek()
+        {
+            if (IsEmpty())
+                throw new InvalidOperationException("Stack is empty.");
+
+            return _elements[_elements.Count - 1];
+        }
+        public bool IsEmpty() => _elements.Count == 0;
+    }
+    #endregion
+
+    #region Part02.Problem 3:
+    public static class ArraySwapper
+    {
+        public static void SwapElements<T>(T[] array, int index1, int index2)
+        {
+            if (array == null) throw new ArgumentNullException(nameof(array));
+            if (index1 < 0 || index1 >= array.Length || index2 < 0 || index2 >= array.Length)
+                throw new IndexOutOfRangeException("Indices are out of range.");
+
+            T temp = array[index1];
+            array[index1] = array[index2];
+            array[index2] = temp;
+        }
+    }
+    #endregion
+
+    #region Part02.Problem 4:
+    public static class ArrayMaxFinder
+    {
+        public static T FindMax<T>(T[] array) where T : IComparable<T>
+        {
+            if (array == null || array.Length == 0)
+                throw new ArgumentException("Array cannot be null or empty.");
+
+            T max = array[0];
+            for (int i = 1; i < array.Length; i++)
+            {
+                if (array[i].CompareTo(max) > 0)
+                {
+                    max = array[i];
+                }
+            }
+            return max;
+        }
+    }
+    #endregion
+}
+
+#region Questions
+/*
+Question: Why is it recommended to explicitly assign values to enum members in some cases?[cite: 1]
+Answer: Explicitly assigning values ensures that the underlying integer values remain constant even if the order of members is changed in the code. This is crucial for database persistence, API serialization, and backward compatibility.
+
+Question: What happens if you assign a value to an enum member that exceeds the underlying type's range?[cite: 1]
+Answer: A compile-time error occurs (e.g., "Constant value cannot be converted to type 'short'"), preventing the code from compiling until the value is fixed within the supported range.
+
+Question: What is the purpose of the virtual keyword when used with properties?[cite: 1]
+Answer: The 'virtual' keyword allows derived classes to override the property's getter and setter logic to extend or modify its behavior while maintaining polymorphism.
+
+Question: Why can't you override a sealed property or method?[cite: 1]
+Answer: The 'sealed' modifier explicitly locks the implementation to prevent further overriding in derived classes, ensuring security, stability, or invariant behavior.
+
+Question: What is the key difference between static and object members?[cite: 1]
+Answer: Static members belong to the class itself and are shared across all instances (stored once in memory), whereas object (instance) members belong to individual instances and hold unique data for each object.
+
+Question: Can you overload all operators in C#? Explain why or why not.[cite: 1]
+Answer: No, not all operators can be overloaded. Operators like assignment (=), member access (.), short-circuit logical operators (&&, ||), conditional (?:), sizeof, and typeof cannot be overloaded to protect the core syntax, memory safety, and logical evaluation rules of the language.
+
+Question: When should you consider changing the underlying type of an enum?[cite: 1]
+Answer: You should change it when memory optimization is critical (e.g., storing millions of enum values in an array/database) or when mapping directly to an external database column/API schema that uses smaller data types like byte or short.
+
+Question: Why can't a static class have instance constructors?[cite: 2]
+Answer: Because static classes cannot be instantiated using the 'new' keyword. Since instance constructors are only executed when creating object instances, having one in a static class is invalid.
+
+Question: What are the advantages of using Enum.TryParse over direct parsing with int.Parse?[cite: 2]
+Answer: Enum.TryParse handles invalid inputs gracefully without throwing costly runtime exceptions, making the code safer, cleaner, and significantly faster when parsing user/external inputs.
+
+Question: What is the difference between overriding Equals and == for object comparison in C# struct and class?[cite: 2]
+Answer: For Structs, Equals performs value comparison by default, while == is NOT implemented by default and must be overloaded. For Classes, both Equals and == perform reference comparison by default unless explicitly overridden to perform value comparison.
+
+Question: Why is overriding ToString beneficial when working with custom classes?[cite: 2]
+Answer: It provides a meaningful, human-readable string representation of an object's internal state, which is extremely useful for debugging, logging, and displaying data in UI controls instead of printing the default class type name.
+
+Question: Can generics be constrained to specific types in C#? Provide an example.[cite: 2]
+Answer: Yes, using the 'where' clause (Generic Constraints). Example: public class Repository<T> where T : class, IComparable<T> { }
+
+Question: What are the key differences between generic methods and generic classes?[cite: 2]
+Answer: A generic class parameterizes the entire class scope and types are specified when instantiating it. A generic method parameterizes only a specific method, allowing type parameters to be inferred or specified independently per method call.
+
+Question: Why might using a generic swap method be preferable to implementing custom methods for each type?[cite: 2]
+Answer: Generic swap methods promote Code Reusability and DRY principles, reduce maintenance overhead, and provide strong compile-time type safety without performance penalties (avoiding boxing/unboxing for value types).
+
+Question: How can overriding Equals for the Department class improve the accuracy of searches?[cite: 2]
+Answer: It allows search operations (like SearchArray or IndexOf) to evaluate logical/structural equality (e.g., matching Department ID or Name) rather than checking if two references point to the exact same memory reference.
+
+Question: Why is == not implemented by default for structs?[cite: 3]
+Answer: Comparing structs with == would require field-by-field value comparison, which can be memory and CPU intensive. C# forces developers to explicitly implement == to avoid unexpected performance costs.
+*/
+#endregion
