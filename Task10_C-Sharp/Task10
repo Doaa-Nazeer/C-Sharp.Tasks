@@ -1,1 +1,404 @@
 
+using System;
+using System.Collections.Generic;
+
+namespace Task10
+{
+    public class Employee : IComparable<Employee>, ICloneable
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Salary { get; set; }
+        public Employee() { }
+
+        public Employee(int id, string name, decimal salary)
+        {
+            Id = id;
+            Name = name;
+            Salary = salary;
+        }
+        public virtual int CompareTo(Employee other)
+        {
+            if (other == null) return 1;
+            return this.Salary.CompareTo(other.Salary);
+        }
+        public object Clone()
+        {
+            return new Employee(this.Id, this.Name, this.Salary);
+        }
+        public override string ToString() => $"[ID: {Id}, Name: {Name}, Salary: {Salary}]";
+    }
+
+    #region part1.problem1
+    public static class SortingAlgorithm<T> where T : IComparable<T>
+    {
+        public static void Sort(T[] array)
+        {
+            if (array == null) return;
+            for (int i = 0; i < array.Length - 1; i++)
+            {
+                for (int j = 0; j < array.Length - i - 1; j++)
+                {
+                    if (array[j].CompareTo(array[j + 1]) > 0)
+                    {
+                        T temp = array[j];
+                        array[j] = array[j + 1];
+                        array[j + 1] = temp;
+                    }
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region part1.problem2
+    public static class SortingTwo<T>
+    {
+        public static void Sort(T[] array, Func<T, T, bool> comparer)
+        {
+            if (array == null || comparer == null) return;
+            for (int i = 0; i < array.Length - 1; i++)
+            {
+                for (int j = 0; j < array.Length - i - 1; j++)
+                {
+                    if (comparer(array[j], array[j + 1]))
+                    {
+                        T temp = array[j];
+                        array[j] = array[j + 1];
+                        array[j + 1] = temp;
+                    }
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region part1.problem3
+    public static class StringLengthSorterDemo
+    {
+        public static void Run()
+        {
+            string[] words = { "Apple", "Banana", "Kiwi", "Fig" };
+            SortingTwo<string>.Sort(words, (s1, s2) => s1.Length > s2.Length);
+        }
+    }
+    #endregion
+
+    #region part1.problem4
+    public class Manager : Employee, IComparable<Manager>
+    {
+        public Manager(int id, string name, decimal salary) : base(id, name, salary) { }
+
+        public int CompareTo(Manager other)
+        {
+            if (other == null) return 1;
+            return this.Salary.CompareTo(other.Salary);
+        }
+    }
+    #endregion
+
+    #region part1.problem5
+    public static class NameLengthSorterDemo
+    {
+        public static void Run()
+        {
+            Employee[] employees = {
+                new Employee(1, "Alexander", 5000),
+                new Employee(2, "Bob", 7000),
+                new Employee(3, "Charlie", 6000)
+            };
+
+            Func<Employee, Employee, bool> comparer = (e1, e2) => e1.Name.Length > e2.Name.Length;
+            SortingTwo<Employee>.Sort(employees, comparer);
+        }
+    }
+    #endregion
+
+    #region part1.problem6
+    public static class AnonymousVsLambdaSortDemo
+    {
+        public static void Run()
+        {
+            int[] numbers1 = { 5, 2, 8, 1, 4 };
+            int[] numbers2 = { 5, 2, 8, 1, 4 };
+
+            // Anonymous Function
+            SortingTwo<int>.Sort(numbers1, delegate (int a, int b) { return a > b; });
+
+            // Lambda Expression
+            SortingTwo<int>.Sort(numbers2, (a, b) => a > b);
+        }
+    }
+    #endregion
+
+    #region part1.problem7
+    public static class StandaloneSwap
+    {
+        public static void Swap<T>(ref T a, ref T b)
+        {
+            T temp = a;
+            a = b;
+            b = temp;
+        }
+    }
+    #endregion
+
+    #region part1.problem8
+    public static class MultiCriteriaSorterDemo
+    {
+        public static void Run()
+        {
+            Employee[] employees = {
+                new Employee(1, "Zack", 5000),
+                new Employee(2, "Alice", 5000),
+                new Employee(3, "Bob", 7000)
+            };
+
+            SortingTwo<Employee>.Sort(employees, (e1, e2) => {
+                if (e1.Salary != e2.Salary)
+                    return e1.Salary > e2.Salary;
+                return string.Compare(e1.Name, e2.Name, StringComparison.Ordinal) > 0;
+            });
+        }
+    }
+    #endregion
+
+    #region part1.problem9
+    public static class DefaultValueUtility
+    {
+        public static T GetDefault<T>()
+        {
+            return default(T);
+        }
+    }
+    #endregion
+
+    #region part1.problem10
+    public static class SortingAlgorithmWithConstraint<T> where T : IComparable<T>, ICloneable
+    {
+        public static T[] CloneAndSort(T[] array)
+        {
+            if (array == null) return null;
+            T[] clonedArray = new T[array.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                clonedArray[i] = (T)array[i].Clone();
+            }
+            SortingAlgorithm<T>.Sort(clonedArray);
+            return clonedArray;
+        }
+    }
+    #endregion
+
+    #region part1.problem11
+    public delegate string StringTransformer(string input);
+
+    public static class StringTransformerDemo
+    {
+        public static List<string> TransformStrings(List<string> list, StringTransformer transformer)
+        {
+            List<string> result = new List<string>();
+            foreach (var item in list)
+            {
+                result.Add(transformer(item));
+            }
+            return result;
+        }
+    }
+    #endregion
+
+    #region part1.problem12
+    public delegate int MathOperation(int a, int b);
+
+    public static class MathOperationDemo
+    {
+        public static int PerformOperation(int a, int b, MathOperation operation)
+        {
+            return operation(a, b);
+        }
+    }
+    #endregion
+
+    #region part1.problem13
+    public delegate R GenericTransformer<T, R>(T input);
+
+    public static class GenericTransformerDemo
+    {
+        public static List<R> TransformList<T, R>(List<T> list, GenericTransformer<T, R> transformer)
+        {
+            List<R> result = new List<R>();
+            foreach (var item in list)
+            {
+                result.Add(transformer(item));
+            }
+            return result;
+        }
+    }
+    #endregion
+
+    #region part1.problem14
+    public static class FuncSquareDemo
+    {
+        public static List<int> SquareList(List<int> numbers, Func<int, int> squareFunc)
+        {
+            List<int> result = new List<int>();
+            foreach (var num in numbers)
+            {
+                result.Add(squareFunc(num));
+            }
+            return result;
+        }
+    }
+    #endregion
+
+    #region part1.problem15
+    public static class ActionPrintDemo
+    {
+        public static void ApplyAction(List<string> strings, Action<string> action)
+        {
+            foreach (var str in strings)
+            {
+                action(str);
+            }
+        }
+    }
+    #endregion
+
+    #region part1.problem16
+    public static class PredicateFilterDemo
+    {
+        public static List<int> FilterEvenNumbers(List<int> numbers, Predicate<int> isEven)
+        {
+            List<int> result = new List<int>();
+            foreach (var num in numbers)
+            {
+                if (isEven(num))
+                {
+                    result.Add(num);
+                }
+            }
+            return result;
+        }
+    }
+    #endregion
+
+    #region part1.problem17
+    public static class AnonymousFilterDemo
+    {
+        public static List<string> FilterStrings(List<string> list, Func<string, bool> predicate)
+        {
+            List<string> result = new List<string>();
+            foreach (var item in list)
+            {
+                if (predicate(item))
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
+        }
+    }
+    #endregion
+
+    #region part1.problem18
+    public static class AnonymousMathDemo
+    {
+        public static int ExecuteMath(int a, int b, Func<int, int, int> operation)
+        {
+            return operation(a, b);
+        }
+    }
+    #endregion
+
+    #region part1.problem19
+    public static class LambdaFilterDemo
+    {
+        public static List<string> FilterStringsLambda(List<string> list, Func<string, bool> predicate)
+        {
+            List<string> result = new List<string>();
+            foreach (var item in list)
+            {
+                if (predicate(item))
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
+        }
+    }
+    #endregion
+
+    #region part1.problem20
+    public static class DoubleMathLambdaDemo
+    {
+        public static double CalculateDouble(double a, double b, Func<double, double, double> operation)
+        {
+            return operation(a, b);
+        }
+    }
+    #endregion
+}
+
+#region Questions
+/*
+Question: What are the benefits of using a generic sorting algorithm over a non-generic one?[cite: 4]
+Answer: Provides compile-time type safety, eliminates the need for type casting, avoids boxing and unboxing penalties for value types, and enables reusing a single sorting implementation across different data types.
+
+Question: How do lambda expressions improve the readability and flexibility of sorting methods?[cite: 4]
+Answer: They allow passing sorting conditions inline concisely without writing full named methods or verbose delegate syntax, making the code cleaner and highly customizable on the fly.
+
+Question: Why is it important to use a dynamic comparer function when sorting objects of various data types?[cite: 4]
+Answer: It allows sorting the same data structure using different criteria dynamically (e.g., sorting by name, length, or date) without modifying the original class or hardcoding comparison logic.
+
+Question: How does implementing IComparable<T> in derived classes enable custom sorting?[cite: 4]
+Answer: It allows derived classes to define their own default comparison behavior explicitly, enabling sorting algorithms that expect IComparable<T> to sort them seamlessly.
+
+Question: What is the advantage of using built-in delegates like Func<T, T, TResult> in generic programming?[cite: 4]
+Answer: It avoids declaring custom delegate types repeatedly, standardizes function signatures across C# codebases, and integrates smoothly with LINQ and modern functional C# features.
+
+Question: How does the usage of anonymous functions differ from lambda expressions in terms of readability and efficiency?[cite: 5]
+Answer: Both compile to similar code under the hood (same runtime efficiency), but lambda expressions are far more readable and concise, replacing the heavy delegate keyword syntax.
+
+Question: Why is the use of generic methods beneficial when creating utility functions like Swap?[cite: 5]
+Answer: It allows a single Swap method to work with any data type safely without code duplication or boxing/unboxing overhead.
+
+Question: What are the challenges and benefits of implementing multi-criteria sorting logic in generic methods?[cite: 5]
+Answer: The benefit is precise multi-level ordering (e.g., sort by Salary then Name). The challenge is managing complex conditional logic and handling null references safely.
+
+Question: Why is the default(T) keyword crucial in generic programming, and how does it handle value and reference types differently?[cite: 5]
+Answer: It allows safely returning an initial/null value for unknown types T; it evaluates to null for reference types and zero/empty memory initialization for value types.
+
+Question: How do constraints in generic programming ensure type safety and improve the reliability of generic methods?[cite: 5]
+Answer: They restrict generic type arguments to types that meet specific criteria (e.g., implementing an interface), allowing access to specific members safely at compile time.
+
+Question: What are the benefits of using delegates for string transformations in a functional programming style?[cite: 5]
+Answer: It decouples string processing pipelines from specific transformation algorithms, making code modular, testable, and reusable.
+
+Question: How does the use of delegates promote code reusability and flexibility in implementing mathematical operations?[cite: 6]
+Answer: It abstracts the operation logic from execution, allowing a single execution engine to perform addition, subtraction, or custom formulas dynamically.
+
+Question: What are the advantages of using generic delegates in transforming data structures?[cite: 6]
+Answer: They enable mapping data structures from type T to type R seamlessly with complete type safety and zero data conversion overhead.
+
+Question: How does Func simplify the creation and usage of delegates in C#?[cite: 6]
+Answer: It eliminates manual delegate declarations for methods returning values, reducing boilerplate code significantly.
+
+Question: Why is Action preferred for operations that do not return values?[cite: 6]
+Answer: It clearly signals a void return type operation (side-effect only, like logging or printing) in a standardized, readable format.
+
+Question: What role do predicates play in functional programming, and how do they enhance code clarity?[cite: 6]
+Answer: Predicates abstract boolean test conditions (Func<T, bool>), making filtering algorithms clean and declarative.
+
+Question: How do anonymous functions improve code modularity and customization?[cite: 7]
+Answer: They allow passing behavior locally without polluting the class with single-use named methods.
+
+Question: When should you prefer anonymous functions over named methods in implementing mathematical operations?[cite: 7]
+Answer: When the operation is short, temporary, and used only within a specific local context.
+
+Question: What makes lambda expressions an essential feature in modern C# programming?[cite: 7]
+Answer: They form the core foundation of LINQ, expression trees, and functional programming patterns in modern C#.
+
+Question: How do lambda expressions enhance the expressiveness of mathematical computations in C#?[cite: 7]
+Answer: They express mathematical formulas inline using natural mathematical notation directly where they are evaluated.
+*/
+#endregion
