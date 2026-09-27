@@ -1,0 +1,307 @@
+using System;
+using System.Collections;
+
+#region Part3.06
+public static class StringExtensions
+{
+    public static bool IsPalindrome(this string str)
+    {
+        if (string.IsNullOrEmpty(str)) return false;
+
+        string cleanedStr = str.ToLower();
+        char[] reversedChars = new char[cleanedStr.Length];
+        int index = 0;
+        for (int i = cleanedStr.Length - 1; i >= 0; i--)
+        {
+            reversedChars[index] = cleanedStr[i];
+            index++;
+        }
+        string reversedStr = new string(reversedChars);
+        for (int i = 0; i < cleanedStr.Length; i++)
+        {
+            if (cleanedStr[i] != reversedStr[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+#endregion
+
+#region Part3.07
+public static class IntExtensions
+{
+    public static bool IsPrime(this int number)
+    {
+        if (number <= 1) return false;
+
+        for (int i = 2; i * i <= number; i++)
+        {
+            if (number % i == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+#endregion
+
+#region Part3.08
+public static class ArrayExtensions
+{
+    public static int Sum(this int[] numbers)
+    {
+        if (numbers == null) return 0;
+
+        int total = 0;
+        foreach (int number in numbers)
+        {
+            total += number;
+        }
+
+        return total;
+    }
+}
+#endregion
+
+#region Part4.10
+class Employee
+{
+    public string Name { get; set; }
+    public double Salary { get; set; }
+
+    public Employee(string name, double salary)
+    {
+        Name = name;
+        Salary = salary;
+    }
+}
+#endregion
+class Program
+{
+
+    static void Main()
+    {
+        #region Part1.01
+        var mInt = 5;
+        var mString = "Hello";
+        var mDouble = 5.5;
+        var mBool = false;
+        var marr = new int[] { 1, 2, 3 };
+
+        Console.WriteLine(mInt.GetType());
+        Console.WriteLine(mString.GetType());
+        Console.WriteLine(mDouble.GetType());
+        Console.WriteLine(mBool.GetType());
+        Console.WriteLine(marr.GetType());
+        #endregion
+
+        #region Part1.02
+        int Int = 2;
+        string Str = "Doaa";
+        bool Bool = true;
+        double dou = 0.0;
+
+        var IntVar = 5;
+        var StrVar = "Hi!";
+        var BoolVar = false;
+        var douVar = 5.0;
+
+        // Explanation:
+        // C# is a statically-typed language. When using 'var', the compiler determines (infers) 
+        // the type at compile time based on the assigned value. Therefore, both approaches 
+        // produce identical Intermediate Language (IL) code, resulting in zero performance difference.
+        #endregion
+
+        #region Part2.03
+        var product = new { Name = "Laptop", Price = 30000, Quantity = 3 };
+        Console.WriteLine($"Name: {product.Name}, Price: {product.Price}, Quantity: {product.Quantity}");
+        #endregion
+
+        #region Part2.04
+        var stu = new[]
+        {
+            new {Name = "Doaa", Grade = 90 },
+            new {Name = "Ahmed", Grade = 80 },
+            new {Name = "Nour", Grade = 70 }
+        };
+        foreach ( var st in stu)
+        {
+            Console.WriteLine($"Student Name: {st.Name}, Grade: {st.Grade}");
+        }
+        #endregion
+
+        #region Part2.05
+        var order = new
+        {
+            OId = 2000,
+            Cust = new { Name = "Doaa", City = "Giza" }
+        };
+        Console.WriteLine($"Order ID: {order.OId}, Customer: {order.Cust.Name}, City: {order.Cust.City}");
+        #endregion
+
+        #region Part3.06
+        string x = "madam";
+        string y = "dotnet";
+
+        Console.WriteLine($"{x} is Palindrome: {x.IsPalindrome()}");
+        Console.WriteLine($"{y} is Palindrome: {y.IsPalindrome()}");
+        #endregion
+
+        #region Part3.07
+        int num1 = 7;
+        int num2 = 10;
+
+        Console.WriteLine($"{num1} is Prime: {num1.IsPrime()}");
+        Console.WriteLine($"{num2} is Prime: {num2.IsPrime()}");
+        #endregion
+
+        #region Part3.08
+
+        int[] numbers = { 10, 20, 30, 40 };
+        Console.WriteLine($"Total Sum: {numbers.Sum()}");
+
+        #endregion
+
+        #region Part4.09
+        List<string> employees = new List<string> { "Ahmed", "Mohamed", "Sara", "Mona" };
+        employees.Add("Ali");
+        employees.Remove("Mohamed");
+
+        string searchName = "Sara";
+        bool isFound = false;
+        foreach (string name in employees)
+        {
+            if (name == searchName)
+            {
+                isFound = true;
+                break;
+            }
+        }
+        Console.WriteLine($"Is '{searchName}' in the list? {isFound}");
+        Console.WriteLine("\nFinal Employee List:");
+        foreach (string name in employees)
+        {
+            Console.WriteLine(name);
+        }
+        #endregion
+
+        #region Part4.10
+        List<Employee> employeeList = new List<Employee>
+        {
+            new Employee("Ahmed", 5000),
+            new Employee("Sara", 8500),
+            new Employee("Ali", 3000),
+            new Employee("Mona", 12000)
+        };
+
+        double threshold = 6000;
+        Console.WriteLine($"Employees with salary above {threshold}:");
+
+        foreach (Employee emp in employeeList)
+        {
+            if (emp.Salary > threshold)
+            {
+                Console.WriteLine($"Name: {emp.Name}, Salary: {emp.Salary}");
+            }
+        }
+        #endregion
+
+        #region Part4.11
+        Dictionary<string, int> products = new Dictionary<string, int>();
+
+        products.Add("Laptop", 15000);
+        products.Add("Mouse", 250);
+        products.Add("Keyboard", 600);
+
+        foreach (KeyValuePair<string, int> product in products)
+        {
+            Console.WriteLine($"Product: {product.Key}, Price: {product.Value} EGP");
+        }
+        #endregion
+
+        #region Part4.12
+        Dictionary<int, string> students = new Dictionary<int, string>
+        {
+            { 101, "Ahmed" },
+            { 102, "Sara" },
+            { 103, "Mona" }
+        };
+
+        Console.Write("Enter Student ID: ");
+        if (int.TryParse(Console.ReadLine(), out int inputId))
+        {
+            if (students.TryGetValue(inputId, out string studentName))
+            {
+                Console.WriteLine($"Found Student: {studentName}");
+            }
+            else
+            {
+                Console.WriteLine("Student ID not found!");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid ID input.");
+        }
+        #endregion
+
+        #region Part4.13
+        Hashtable table = new Hashtable();
+
+        table.Add(1, "First Element");
+        table.Add("Two", 2);
+        table.Add(3.5, true);
+
+        foreach (DictionaryEntry entry in table)
+        {
+            Console.WriteLine($"Key: {entry.Key}, Value: {entry.Value}");
+        }
+        #endregion
+
+        #region Part4.14
+        Dictionary<string, string> dict = new Dictionary<string, string>();
+        dict.Add("US", "United States");
+        dict.Add("EG", "Egypt");
+
+        string country = dict["EG"];
+
+        Hashtable hashtable = new Hashtable();
+        hashtable.Add("US", "United States");
+        hashtable.Add("EG", "Egypt");
+
+        string countryFromHash = (string)hashtable["EG"];
+
+        /* 
+         Practical Difference:
+         Dictionary is generic (Dictionary<TKey, TValue>), providing type safety at compile time 
+         and better performance by avoiding boxing/unboxing. 
+         Hashtable stores keys/values as 'object', requiring explicit casting and potentially 
+         leading to runtime type errors.
+        */
+        #endregion
+
+        #region Short Write-Ups
+        /* 1. What is the difference between a delegate and a lambda expression?
+        - Delegate: A type-safe function pointer/type definition that defines the signature 
+         of a method (return type and parameters).
+        - Lambda Expression: An anonymous function (inline syntax using =>) used to create 
+          instances of delegates or expression trees in a concise way.
+
+        2. Why is var still statically typed even though the type isn't written explicitly?
+        - Because the compiler infers and determines the exact data type at COMPILE TIME 
+        based on the initialization value on the right side of the assignment. 
+        - Once compiled, the variable type is fixed and cannot be changed dynamically 
+        at runtime.
+
+        3. Give one real scenario where an anonymous type is more convenient than 
+        creating a full class.
+        - Scenario: Selecting a temporary, read-only subset of data from a query or 
+        database (e.g., shaping dynamic data containing only Product 'Name' and 'Price' 
+        for display in a UI control) without the overhead of creating and maintaining 
+        a separate class file for a single-use operation.*/
+        #endregion
+    }
+}
