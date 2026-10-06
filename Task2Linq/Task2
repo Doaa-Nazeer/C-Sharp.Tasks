@@ -1,0 +1,535 @@
+using System;
+using day10_G01;
+using static day10_G01.ListGenerators;
+
+namespace Task2Linq
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            #region Restriction Operators.01
+            var res1 = ProductList.Where((p) => p.UnitsInStock == 0);
+            foreach (var item in res1)
+            {
+                Console.WriteLine(item);
+            }
+            #endregion
+
+            #region Restriction Operators.02
+            var res2 = ProductList.Where((p) => p.UnitsInStock > 0 && p.UnitPrice > 3.00M);
+            foreach (var item in res2)
+            {
+                Console.WriteLine(item);
+            }
+            #endregion
+
+            #region Restriction Operators.03
+            string[] Arr1 = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+            var res = Arr1.Where((digit, index) => digit.Length < index);
+            foreach (var item in res)
+            {
+                Console.WriteLine(item);
+            }
+            #endregion
+
+            #region Element Operators.01
+            var res3 = ProductList.FirstOrDefault((p) => p.UnitsInStock == 0);
+            if (res3 != null)
+            {
+                Console.WriteLine(res3.ProductName);
+            }
+            else
+            {
+                Console.WriteLine("No out of stock products found.");
+            }
+            #endregion
+
+            #region Element Operators.02
+            var res4 = ProductList.FirstOrDefault((p) => p.UnitPrice > 1000);
+            if (res3 != null)
+            {
+                Console.WriteLine(res3.UnitPrice);
+            }
+            else
+            {
+                Console.WriteLine("Null");
+            }
+            #endregion
+
+            #region Element Operators.03
+            int[] Arr = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            var res5 = Arr.Where((n) => n > 5)
+                .Skip(1)
+                .FirstOrDefault();
+            Console.WriteLine(res5);
+            #endregion
+
+            #region Aggregate Operators.01
+            int[] Arr2 = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            int Count = Arr2.Count((n) => n % 2 != 0);
+            Console.WriteLine($"Number of odd numbers: {Count}");
+            #endregion
+
+            #region Aggregate Operators.03
+            var res6 = ProductList.GroupBy((p) => p.Category)
+                      .Select((p) => new
+                      {
+                          Category = p.Key,
+                          ProductCount = p.Count()
+                      });
+            foreach (var item in res6)
+            {
+                Console.WriteLine(item);
+            }
+            #endregion
+
+            #region Aggregate Operators.04
+            int[] Arr3 = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            int total = Arr3.Sum();
+            Console.WriteLine(total);
+            #endregion
+
+            #region Aggregate Operators.06
+            var res7 = ProductList.GroupBy((p) => p.Category)
+                        .Select((p) => new
+                        {
+                            Category = p.Key,
+                            TotalUnitsInStock = p.Sum((p) => p.UnitsInStock)
+                        });
+            foreach (var item in res7)
+            {
+                Console.WriteLine($"Category: {item.Category}, Total Stock: {item.TotalUnitsInStock}");
+            }
+            #endregion
+
+            #region Aggregate Operators.08
+            var res8 = ProductList.GroupBy((p) => p.Category)
+                        .Select((p) => new
+                        {
+                            Category = p.Key,
+                            CheapestPrice = p.Min((p) => p.UnitPrice)
+                        });
+            foreach (var item in res8)
+            {
+                Console.WriteLine($"Category: {item.Category}, Cheapest Price: {item.CheapestPrice:C}");
+            }
+            #endregion
+
+            #region Aggregate Operators.11
+            var res9 = ProductList.GroupBy((p) => p.Category)
+                        .Select((p) => new
+                        {
+                            Category = p.Key,
+                            MostExpensivePrice = p.Max((p) => p.UnitPrice)
+                        });
+            foreach (var item in res9)
+            {
+                Console.WriteLine($"Category: {item.Category}, Most Expensive Price: {item.MostExpensivePrice:C}");
+            }
+            #endregion
+
+            #region Aggregate Operators.14
+            var res10 = ProductList.GroupBy((p) => p.Category)
+                        .Select((p) => new
+                        {
+                            Category = p.Key,
+                            AveragePrice = p.Average((p) => p.UnitPrice)
+                        });
+            foreach (var item in res10)
+            {
+                Console.WriteLine($"Category: {item.Category}, Average Price: {item.AveragePrice:C}");
+            }
+            #endregion
+
+
+            #region Ordering Operators.1
+            var res11 = ProductList.OrderBy((p) => p.ProductName);
+            foreach (var item in res11)
+            {
+                Console.WriteLine(item.ProductName);
+            }
+            #endregion
+
+            #region Ordering Operators.3
+            var res12 = ProductList.OrderByDescending((p) => p.UnitsInStock);
+            foreach (var item in res2)
+            {
+                Console.WriteLine($"Product: {item.ProductName}, Units In Stock: {item.UnitsInStock}");
+            }
+            #endregion
+
+            #region Ordering Operators.4
+            string [] arr4 = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight","nine" };
+            var sortedDigits = arr4.OrderBy((d) => d.Length)
+                                   .ThenBy((d) => d);
+            foreach (var item in sortedDigits)
+            {
+                Console.WriteLine(item);
+            }
+            #endregion
+
+            #region Ordering Operators.5
+            string[] words = { "aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry" };
+            var sortedWords = words.OrderBy((w) => w.Length)
+                                   .ThenBy((w) => w, StringComparer.OrdinalIgnoreCase);
+            foreach (var word in sortedWords)
+            {
+                Console.WriteLine(word);
+            }
+            #endregion
+
+            #region Ordering Operators.6
+            var res13 = ProductList.OrderBy((p) => p.Category)
+                             .ThenByDescending((p) => p.UnitPrice);
+            foreach (var item in res13)
+            {
+                Console.WriteLine($"Category: {item.Category,-15} | Price: {item.UnitPrice,8:C} | Product: {item.ProductName}");
+            }
+            #endregion
+
+            #region Ordering Operators.7
+            string[] Arr5 = { "aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry" };
+            var res14 = Arr5.OrderBy((w) => w.Length)
+                             .ThenByDescending(w => w, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var word in res14)
+            {
+                Console.WriteLine(word);
+            }
+            #endregion
+
+            #region Ordering Operators.8
+            string[] Arr6 = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+            var res15 = Arr6.Where((d) => d.Length > 1 && char.ToLower(d[1]) == 'i')
+                             .Reverse();
+            foreach (var digit in res15)
+            {
+                Console.WriteLine(digit);
+            }
+            #endregion
+
+            #region Transformation Operators.1
+            var res15 = ProductList.Select((p) => p.ProductName);
+
+            foreach (var name in res15)
+            {
+                Console.WriteLine(name);
+            }
+            #endregion
+
+            #region Transformation Operators.2
+            string[] words = { "aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry" };
+            var res16 = words.Select((w) => new
+            {
+                Upper = w.ToUpper(),
+                Lower = w.ToLower()
+            });
+            foreach (var item in res16)
+            {
+                Console.WriteLine($"Uppercase: {item.Upper}, Lowercase: {item.Lower}");
+            }
+            #endregion
+
+            #region Transformation Operators.3
+            var res17 = ProductList.Select((p) => new
+            {
+                p.ProductID,
+                p.ProductName,
+                Price = p.UnitPrice
+            });
+            foreach (var item in res17)
+            {
+                Console.WriteLine($"ID: {item.ProductID}, Name: {item.ProductName}, Price: {item.Price}");
+            }
+            #endregion
+
+            #region Transformation Operators.4
+            int[] Arr7 = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            var res18 = Arr7.Select((num, index) => new
+            {
+                Number = num,
+                InPlace = (num == index)
+            });
+            foreach (var item in res18)
+            {
+                Console.WriteLine($"{item.Number}: {item.InPlace}");
+            }
+            #endregion
+
+            #region Transformation Operators.5
+            int[] numbersA = { 0, 2, 4, 5, 6, 8, 9 };
+            int[] numbersB = { 1, 3, 5, 7, 8 };
+            var res19 = from a in numbersA
+                          from b in numbersB
+                          where a < b
+                          select new { a, b };
+            Console.WriteLine("Pairs where a < b:");
+            foreach (var pair in res19)
+            {
+                Console.WriteLine($"{pair.a} is less than {pair.b}");
+            }
+            #endregion
+
+            #region Aggregate Operators.1
+            int[] Arr8 = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            var oddCount = (from n in Arr
+                            where n % 2 != 0
+                            select n).Count();
+            Console.WriteLine($"Number of odd numbers: {oddCount}");
+            #endregion
+
+            #region Aggregate Operators.2
+            var res20 = from p in ProductList
+                        group p by p.Category into g
+                        select new
+                        {
+                            Category = g.Key,
+                            ProductCount = g.Count()
+                        };
+            foreach (var item in res20)
+            {
+                Console.WriteLine($"Category: {item.Category}, Products Count: {item.ProductCount}");
+            }
+            #endregion
+
+            #region Aggregate Operators.3
+            var res21 = from p in ProductList
+                          group p by p.Category into g
+                          select new
+                          {
+                              Category = g.Key,
+                              ProductCount = g.Count()
+                          };
+            foreach (var item in res21)
+            {
+                Console.WriteLine($"Category: {item.Category}, Products Count: {item.ProductCount}");
+            }
+            #endregion
+
+            #region Aggregate Operators.4
+            int[] Arr8 = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            var totalSum = (from n in Arr8
+                            select n).Sum();
+
+            Console.WriteLine($"Total sum: {totalSum}");
+            #endregion
+
+            #region Aggregate Operators.6
+            var res22 = ProductList.GroupBy((p) => p.Category)
+                              .Select(g => new
+                              {
+                                  Category = g.Key,
+                                  TotalUnitsInStock = g.Sum(p => p.UnitsInStock)
+                              });
+            foreach (var item in res22)
+            {
+                Console.WriteLine($"Category: {item.Category}, Total Units In Stock: {item.TotalUnitsInStock}");
+            }
+            #endregion
+
+            #region Aggregate Operators.8
+            var res23 = ProductList.GroupBy((p) => p.Category)
+                         .Select(p => new
+                         {
+                             Category = p.Key,
+                             CheapestPrice = p.Min((p) => p.UnitPrice)
+                         });
+            foreach (var item in res23)
+            {
+                Console.WriteLine($"Category: {item.Category}, Cheapest Price: {item.CheapestPrice:C}");
+            }
+            #endregion
+
+            #region Aggregate Operators.9
+            var res24 = ProductList.GroupBy((p) => p.Category)
+                         .Select(p => new
+                         {
+                             Category = p.Key,
+                             CheapestProducts = p.Where((p) => p.UnitPrice == g.Min(min => min.UnitPrice))
+                         });
+            foreach (var group in res25)
+            {
+                Console.WriteLine($"Category: {group.Category}");
+                foreach (var product in group.CheapestProducts)
+                {
+                    Console.WriteLine($"\tProduct: {product.ProductName}, Price: {product.UnitPrice:C}");
+                }
+            }
+            #endregion
+
+            #region Aggregate Operators.11
+            var res25 = ProductList.GroupBy((p) => p.Category)
+                          .Select((p) => new
+                          {
+                              Category = p.Key,
+                              MostExpensivePrice = p.Max(p => p.UnitPrice)
+                          });
+            foreach (var item in res25)
+            {
+                Console.WriteLine($"Category: {item.Category}, Most Expensive Price: {item.MostExpensivePrice:C}");
+            }
+            #endregion
+
+            #region Aggregate Operators.12
+            var res26 = ProductList.GroupBy((p) => p.Category)
+                          .Select((p) => new
+                          {
+                              Category = p.Key,
+                              MostExpensiveProducts = p.Where(p => p.UnitPrice == p.Max(max => max.UnitPrice))
+                          });
+            foreach (var group in res26)
+            {
+                Console.WriteLine($"Category: {group.Category}");
+                foreach (var product in group.MostExpensiveProducts)
+                {
+                    Console.WriteLine($"\tProduct: {product.ProductName}, Price: {product.UnitPrice:C}");
+                }
+            }
+            #endregion
+
+            #region Aggregate Operators.14
+            var res27 = ProductList.GroupBy((p) => p.Category)
+                          .Select((p) => new
+                          {
+                              Category = p.Key,
+                              AveragePrice = p.Average((p) => p.UnitPrice)
+                          });
+
+            foreach (var item in res27)
+            {
+                Console.WriteLine($"Category: {item.Category}, Average Price: {item.AveragePrice:C}");
+            }
+            #endregion
+
+            #region Ordering Operators.1
+            int[] numbers = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var res28 = numbers.GroupBy((n) => n % 5)
+                                .Select((p) => new
+                                {
+                                    Remainder = p.Key,
+                                    Numbers = p
+                                });
+            foreach (var group in res28)
+            {
+                Console.WriteLine($"Numbers with a remainder of {group.Remainder} when divided by 5:");
+                foreach (var num in group.Numbers)
+                {
+                    Console.WriteLine($"\t{num}");
+                }
+            }
+            #endregion
+
+            #region Ordering Operators.2
+            string[] words = { "from", "salt", "prefix", "near", "form", "symbol", "syntax", "sort", "item" };
+
+            var res29 = words.GroupBy((p) => p[0])
+                              .Select((p) => new
+                              {
+                                  FirstLetter = p.Key,
+                                  Words = p
+                              });
+            foreach (var group in res29)
+            {
+                Console.WriteLine($"Words starting with '{group.FirstLetter}':");
+                foreach (var word in group.Words)
+                {
+                    Console.WriteLine($"\t{word}");
+                }
+            }
+            #endregion
+
+            #region Ordering Operators.3
+            string[] Arr9 = { "app", "apple", "banana", "cat", "dog", "elephant" };
+            var res30 = Arr9.GroupBy((p) => p.Length)
+                            .Select((p) => new
+                            {
+                                Length = p.Key,
+                                Words = p
+                            });
+
+            foreach (var group in res30)
+            {
+                Console.WriteLine($"Words of length {group.Length}:");
+                foreach (var word in group.Words)
+                {
+                    Console.WriteLine($"\t{word}");
+                }
+            }
+            #endregion
+
+            #region Partitioning Operators.3
+            int[] numbers1 = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            var res31 = numbers1.TakeWhile((num, index) => num >= index);
+            foreach (var item in res31)
+            {
+                Console.WriteLine(item);
+            }
+            #endregion
+
+            #region Partitioning Operators.4
+            int[] numbers2 = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            var res32 = numbers2.SkipWhile(n => n % 3 != 0);
+            foreach (var item in res32)
+            {
+                Console.WriteLine(item);
+            }
+            #endregion
+
+            #region Partitioning Operators.5
+            int[] numbers3 = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            var res33 = numbers3.SkipWhile((num, index) => num >= index);
+            foreach (var item in res33)
+            {
+                Console.WriteLine(item);
+            }
+            #endregion
+
+            #region Partitioning Operators.2
+            var res34 = ProductList.GroupBy((p) => p.Category)
+                                   .Where((p) => p.Any(p => p.UnitsInStock == 0))
+                                   .Select((p) => new
+                                   {
+                                       Category = p.Key,
+                                       Products = p
+                                   });
+            foreach (var group in res34)
+            {
+                Console.WriteLine($"Category: {group.Category}");
+                foreach (var product in group.Products)
+                {
+                    Console.WriteLine($"\tProduct: {product.ProductName}, Units In Stock: {product.UnitsInStock}");
+                }
+            }
+            #endregion
+
+            #region Partitioning Operators.3
+            var res35 = ProductList.GroupBy((p) => p.Category)
+                                   .Where((p) => p.All(p => p.UnitsInStock > 0))
+                                   .Select((p) => new
+                                   {
+                                       Category = p.Key,
+                                       Products = p
+                                   });
+            foreach (var group in res35)
+            {
+                Console.WriteLine($"Category: {group.Category}");
+                foreach (var product in group.Products)
+                {
+                    Console.WriteLine($"\tProduct: {product.ProductName}, Units In Stock: {product.UnitsInStock}");
+                }
+            }
+            #endregion
+
+            #region Partitioning Operators.5
+            int[] numbers4 = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            var res36 = numbers4.SkipWhile((num, index) => num >= index);
+            foreach (var item in res36)
+            {
+                Console.WriteLine(item);
+            }
+            #endregion
+
+        }
+    }
+}
